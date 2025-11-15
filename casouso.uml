@@ -1,0 +1,52 @@
+@startuml
+' Diagrama de Casos de Uso: Gerenciador de Tarefas
+
+left to right direction
+
+actor "Usuário" as user
+
+rectangle "Sistema Gerenciador de Tarefas" {
+  usecase "Autenticar-se no sistema" as UC_AUTH
+  usecase "Visualizar Dashboard" as UC_DASH
+  usecase "Gerenciar Funcionários" as UC_MAN_FUNC
+  usecase "Gerenciar Tarefas" as UC_MAN_TASK
+  usecase "Sair do sistema (Logout)" as UC_LOGOUT
+
+  ' Casos de uso incluídos por Gerenciar Funcionários
+  usecase "Listar Funcionários" as UC_LIST_F
+  usecase "Criar / Editar Funcionário" as UC_CRUD_F
+  usecase "Excluir Funcionário" as UC_DEL_F
+
+  ' Casos de uso incluídos por Gerenciar Tarefas
+  usecase "Listar Tarefas" as UC_LIST_T
+  usecase "Criar / Editar Tarefa" as UC_CRUD_T
+  usecase "Excluir Tarefa" as UC_DEL_T
+}
+
+' Relacionamentos primários do ator com os casos de uso principais
+user -- UC_AUTH
+user -- UC_DASH
+user -- UC_MAN_FUNC
+user -- UC_MAN_TASK
+user -- UC_LOGOUT
+
+' O gerenciamento de funcionários "inclui" as operações de CRUD
+UC_MAN_FUNC ..> UC_LIST_F : <<include>>
+UC_MAN_FUNC ..> UC_CRUD_F : <<include>>
+UC_MAN_FUNC ..> UC_DEL_F  : <<include>>
+
+' O gerenciamento de tarefas "inclui" as operações de CRUD
+UC_MAN_TASK ..> UC_LIST_T : <<include>>
+UC_MAN_TASK ..> UC_CRUD_T : <<include>>
+UC_MAN_TASK ..> UC_DEL_T  : <<include>>
+
+' A funcionalidade de ordenação "estende" as listagens
+UC_LIST_F <.. (Ordenar Lista) : <<extend>>
+UC_LIST_T <.. (Ordenar Lista) : <<extend>>
+
+' O dashboard "inclui" a visualização de múltiplos componentes
+UC_DASH ..> (Ver Estatísticas Gerais) : <<include>>
+UC_DASH ..> (Ver Gráfico de Tarefas) : <<include>>
+UC_DASH ..> (Ver Prazos Próximos) : <<include>>
+
+@enduml
